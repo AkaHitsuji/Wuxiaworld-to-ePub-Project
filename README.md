@@ -1,8 +1,3 @@
-# Attention
-Last huge update coming in the next couple of weeks. After the update I won't add new features and will only maintain functionality of the program.
-So if you have a suggestion that you think should be implemented, open up a new Issue or write me an E-Mail to bloodvioletssword@gmail.com.
-The last update will include a CSS Stylesheet that will hopefully make them look like they were professionally edited. So keep an eye out  for upcomming updates :)
-
 # Wuxiaworld to ePub Project
 I am a big fan of many wuxiaworld novels and I needed to learn python. But I often get frustrated that i'm not able to save the chapters for offline reading. So I used this as a  motivation to create a python script that downloads chapters and saves them into an ePub format for easy reading on my iPhone.
 
