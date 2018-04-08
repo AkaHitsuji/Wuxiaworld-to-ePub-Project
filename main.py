@@ -3,6 +3,9 @@ from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 import requests
 import os
+import re
+
+test_url = 'https://www.wuxiaworld.com/novel/against-the-gods'
 
 # use Mozilla to open webpage to bypass mod_security that blocks bots and pass into htmltext
 url = 'https://www.wuxiaworld.com/novel/against-the-gods/atg-chapter-1'
@@ -17,6 +20,19 @@ soup = BeautifulSoup(htmltext, 'html.parser')
 # print(soup_story)
 # for line in soup_story:
 #     print(line.text)
+
+def download_links(url_link):
+    page = requests.get(url_link).text
+    soup = BeautifulSoup(page, 'html.parser')
+    # soup = soup.find_all('a', href='novel')
+    list_of_links = []
+    counter = 0
+    for a in soup.find_all('a', href=re.compile("novel/against-the-gods")):
+        list_of_links.append(a['href'])
+        counter+=1
+    print("Number of Chapters: ", counter)
+    print("Number of chapters in list_of_links: ", len(list_of_links))
+
 
 def download_chapter(url_link, file_name):
     page = requests.get(url_link).text
@@ -41,8 +57,9 @@ def clean_chapter(file_in, file_out):
     file.close()
     os.remove(file_in)
 
+download_links(test_url)
 download_chapter(url, 'test.html')
-clean_chapter('test.html','clean.html')
+clean_chapter('test.html','clean.xhtml')
 
 
 
