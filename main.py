@@ -9,9 +9,22 @@ from bs4 import BeautifulSoup
 from ebooklib import epub
 
 # global variables
-test_url = 'https://www.wuxiaworld.com/novel/against-the-gods'
+novel_url = 'https://www.wuxiaworld.com/novel/'
+chinese_novel_url = 'https://www.wuxiaworld.com/language/chinese'
 list_of_links = []
 list_of_chapters = []
+
+def download_cover(url_link):
+    page = requests.get(url_link).text
+    soup = BeautifulSoup(page, 'html.parser')
+    soup = soup.find('a', href=re.compile("novel/against-the-gods"))
+    soup = soup.find_all('img')
+
+    image_url = 'https://www.wuxiaworld.com'+ soup[0]['src']
+    img_data = requests.get(image_url).content
+    with open('cover_page.jpg', 'wb') as handler:
+        handler.write(img_data)
+
 
 def download_links(url_link):
     page = requests.get(url_link).text
@@ -45,26 +58,17 @@ def clean_chapter(file_in, file_out):
     os.remove(file_in)
 
 # main code
-download_links(test_url)
-
-# counter = 0
-# for chapter in list_of_links:
-#     # for testing: only print first two chapters
-#     counter+=1
-#     if counter==3:
-#         break
-#
-#     chapter_title = chapter.split("/")[3]
-#     download_chapter('https://www.wuxiaworld.com' + chapter, chapter_title + '.html')
-#     clean_chapter(chapter_title + '.html', chapter_title + '.xhtml')
+download_links(novel_url+'against-the-gods')
+download_cover(chinese_novel_url)
 
 # create epub
 book = epub.EpubBook()
 
 # set metadata
 book.set_identifier('id123456')
-book.set_title('Sample book')
+book.set_title('Against the Gods')
 book.set_language('en')
+book.set_cover("cover_page.jpg", open('cover_page.jpg', 'rb').read())
 
 book.add_author('Author Authorowski')
 book.add_author('Danko Bananko', file_as='Gospodin Danko Bananko', role='ill', uid='coauthor')
