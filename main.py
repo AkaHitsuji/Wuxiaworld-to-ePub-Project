@@ -8,16 +8,18 @@ from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 from ebooklib import epub
 
+from booksDB import novels
+
 # global variables
 novel_url = 'https://www.wuxiaworld.com/novel/'
 chinese_novel_url = 'https://www.wuxiaworld.com/language/chinese'
 list_of_links = []
 list_of_chapters = []
 
-def download_cover(url_link):
+def download_cover(url_link, novel_name):
     page = requests.get(url_link).text
     soup = BeautifulSoup(page, 'html.parser')
-    soup = soup.find('a', href=re.compile("novel/against-the-gods"))
+    soup = soup.find('a', href=re.compile("novel/" + novel_name))
     soup = soup.find_all('img')
 
     image_url = 'https://www.wuxiaworld.com'+ soup[0]['src']
@@ -25,11 +27,10 @@ def download_cover(url_link):
     with open('cover_page.jpg', 'wb') as handler:
         handler.write(img_data)
 
-
-def download_links(url_link):
+def download_links(url_link, novel_name):
     page = requests.get(url_link).text
     soup = BeautifulSoup(page, 'html.parser')
-    for a in soup.find_all('a', href=re.compile("novel/against-the-gods")):
+    for a in soup.find_all('a', href=re.compile("novel/"+ novel_name)):
         list_of_links.append(a['href'])
     print("Number of Chapters: ", len(list_of_links))
 
@@ -57,29 +58,38 @@ def clean_chapter(file_in, file_out):
     file.write(text)
     os.remove(file_in)
 
+def remove_chapter(file_in):
+    os.remove(file_in)
+
 # main code
-download_links(novel_url+'against-the-gods')
-download_cover(chinese_novel_url)
+while True:
+    selected_novel = input("Name of novel: ")
+    if selected_novel in novels:
+        break
+    else:
+        print("Novel does not exist, please input again.")
+
+novel_name = novels[selected_novel]
+
+download_links(novel_url+novel_name, novel_name)
+download_cover(chinese_novel_url, novel_name)
 
 # create epub
 book = epub.EpubBook()
 
 # set metadata
 book.set_identifier('id123456')
-book.set_title('Against the Gods')
+book.set_title(selected_novel + ' - EPUB generator by AkaHitsuji')
 book.set_language('en')
 book.set_cover("cover_page.jpg", open('cover_page.jpg', 'rb').read())
-
-book.add_author('Author Authorowski')
-book.add_author('Danko Bananko', file_as='Gospodin Danko Bananko', role='ill', uid='coauthor')
 
 list_of_epub_chapters = []
 array_length = len(list_of_links)
 counter = 0
 for i in range(array_length):
-    # for testing: only print first two chapters
+    # for testing: set limit on test printing
     counter+=1
-    if counter==3:
+    if counter==2:
         break
 
     chapter_title = list_of_links[i].split("/")[3]
@@ -89,6 +99,7 @@ for i in range(array_length):
     chapter_content = BeautifulSoup(chapter_content, 'html.parser')
     chapter_content = chapter_content.get_text(separator='\n\n')
     chapter_content = "<br />".join(chapter_content.split("\n"))
+    remove_chapter(chapter_title + '.xhtml')
 
     # create chapter
     epub_chapter = epub.EpubHtml(title=list_of_chapters[i], file_name=chapter_title + '.xhtml', lang='hr')
@@ -119,4 +130,4 @@ for epub_chapter in list_of_epub_chapters:
     book.spine.append(epub_chapter)
 
 # write to the file
-epub.write_epub('ATGtest.epub', book)
+epub.write_epub(selected_novel + '.epub', book)
