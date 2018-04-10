@@ -70,15 +70,16 @@ book.add_author('Author Authorowski')
 book.add_author('Danko Bananko', file_as='Gospodin Danko Bananko', role='ill', uid='coauthor')
 
 list_of_epub_chapters = []
+array_length = len(list_of_links)
 counter = 0
-for chapter in list_of_links:
+for i in range(array_length):
     # for testing: only print first two chapters
     counter+=1
     if counter==3:
         break
 
-    chapter_title = chapter.split("/")[3]
-    download_chapter('https://www.wuxiaworld.com' + chapter, chapter_title + '.html')
+    chapter_title = list_of_links[i].split("/")[3]
+    download_chapter('https://www.wuxiaworld.com' + list_of_links[i], chapter_title + '.html')
     clean_chapter(chapter_title + '.html', chapter_title + '.xhtml')
     chapter_content = open(chapter_title + '.xhtml', "r", encoding="utf8")
     chapter_content = BeautifulSoup(chapter_content, 'html.parser')
@@ -86,8 +87,8 @@ for chapter in list_of_links:
     chapter_content = "<br />".join(chapter_content.split("\n"))
 
     # create chapter
-    epub_chapter = epub.EpubHtml(title=chapter_title, file_name=chapter_title + '.xhtml', lang='hr')
-    epub_chapter.content = '<head>\n<title>' + chapter_title + '</title>\n</head>\n<body>\n<strong>' + chapter_title + '</strong>\n<p>' + chapter_content + '</p>\n</body>\n</html>'
+    epub_chapter = epub.EpubHtml(title=list_of_chapters[i], file_name=chapter_title + '.xhtml', lang='hr')
+    epub_chapter.content = '<head>\n<title>' + list_of_chapters[i] + '</title>\n</head>\n<body>\n<strong>' + list_of_chapters[i] + '</strong>\n<p>' + chapter_content + '</p>\n</body>\n</html>'
 
     # add chapter
     book.add_item(epub_chapter)
@@ -96,11 +97,6 @@ for chapter in list_of_links:
 # define Table Of Contents
 for epub_chapter in list_of_epub_chapters:
     book.toc.append(epub_chapter)
-# book.toc = (epub.Link('intro.xhtml', 'Introduction', 'intro'),
-#             (epub.Section('Languages'),
-#             (list_of_epub_chapters))
-#             )
-print(book.toc)
 
 # add default NCX and Nav file
 book.add_item(epub.EpubNcx())
@@ -120,87 +116,3 @@ for epub_chapter in list_of_epub_chapters:
 
 # write to the file
 epub.write_epub('ATGtest.epub', book)
-
-# if __name__ == '__main__':
-#     book = epub.EpubBook()
-#
-#     # add metadata
-#     book.set_identifier('sample123456')
-#     book.set_title('Sample book')
-#     book.set_language('en')
-#
-#     book.add_author('Aleksandar Erkalovic')
-#
-#     # intro chapter
-#     c1 = epub.EpubHtml(title='Introduction', file_name='intro.xhtml', lang='hr')
-#     c1.content=u'<html><head></head><body><h1>Introduction</h1><p>Introduction paragraph where i explain what is happening.</p></body></html>'
-#
-#     # defube style
-#     style = '''BODY { text-align: justify;}'''
-#
-#     default_css = epub.EpubItem(uid="style_default", file_name="style/default.css", media_type="text/css", content=style)
-#     book.add_item(default_css)
-#
-#
-#     # about chapter
-#     c2 = epub.EpubHtml(title='About this book', file_name='about.xhtml')
-#     c2.content='<h1>About this book</h1><p>Helou, this is my book! There are many books, but this one is mine.</p>'
-#     c2.set_language('hr')
-#     c2.properties.append('rendition:layout-pre-paginated rendition:orientation-landscape rendition:spread-none')
-#     c2.add_item(default_css)
-#
-#     # add chapters to the book
-#     book.add_item(c1)
-#     book.add_item(c2)
-#
-#
-#
-#     # create table of contents
-#     # - add manual link
-#     # - add section
-#     # - add auto created links to chapters
-#
-#     book.toc = (epub.Link('intro.xhtml', 'Introduction', 'intro'),
-#                 (epub.Section('Languages'),
-#                  (c1, c2))
-#                 )
-#
-#     # add navigation files
-#     book.add_item(epub.EpubNcx())
-#     book.add_item(epub.EpubNav())
-#
-#     # define css style
-#     style = '''
-# @namespace epub "http://www.idpf.org/2007/ops";
-# body {
-#     font-family: Cambria, Liberation Serif, Bitstream Vera Serif, Georgia, Times, Times New Roman, serif;
-# }
-# h2 {
-#      text-align: left;
-#      text-transform: uppercase;
-#      font-weight: 200;
-# }
-# ol {
-#         list-style-type: none;
-# }
-# ol > li:first-child {
-#         margin-top: 0.3em;
-# }
-# nav[epub|type~='toc'] > ol > li > ol  {
-#     list-style-type:square;
-# }
-# nav[epub|type~='toc'] > ol > li > ol > li {
-#         margin-top: 0.3em;
-# }
-# '''
-#
-#     # add css file
-#     nav_css = epub.EpubItem(uid="style_nav", file_name="style/nav.css", media_type="text/css", content=style)
-#     book.add_item(nav_css)
-#
-#     # create spine
-#     book.spine = ['nav', c1, c2]
-#     print(book.spine)
-#
-#     # create epub file
-#     epub.write_epub('test.epub', book, {})
