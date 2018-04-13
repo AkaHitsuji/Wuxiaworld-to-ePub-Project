@@ -21,7 +21,6 @@ list_of_links = functions.download_links(novel_url+novel_name, novel_name)
 print("Number of Chapters: ", len(list_of_links))
 
 functions.download_cover(chinese_novel_url, novel_name)
-print("Cover page downloaded.")
 
 functions.create_epub(selected_novel, list_of_links)
 print("ePub created")
