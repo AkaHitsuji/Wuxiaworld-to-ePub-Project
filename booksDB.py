@@ -1,4 +1,6 @@
 novels = {
+    "A Record of a Mortal’s Journey to Immortality": "rmji",
+    
     "Against the Gods": "against-the-gods",
     "Emperor's Domination": "emperors-domination",
     "Martial God Asura": "martial-god-asura",

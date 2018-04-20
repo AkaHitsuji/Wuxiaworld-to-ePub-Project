@@ -7,7 +7,12 @@ import ebooklib
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 from ebooklib import epub
+from booksDB import novels
 
+# global variables
+novel_url = 'https://www.wuxiaworld.com/novel/'
+chinese_novel_url = 'https://www.wuxiaworld.com/language/chinese'
+list_of_links = []
 list_of_chapters = []
 cover_page_exists = False
 
@@ -72,7 +77,7 @@ def clean_chapter(file_in, file_out):
 def remove_file(file_in):
     os.remove(file_in)
 
-def create_epub(selected_novel, list_of_links):
+def create_epub(selected_novel, list_of_links, window, lbl_numOfChapters):
     book = epub.EpubBook()
 
     # set metadata
@@ -106,6 +111,10 @@ def create_epub(selected_novel, list_of_links):
         epub_chapter = epub.EpubHtml(title=list_of_chapters[i], file_name=chapter_title + '.xhtml', lang='hr')
         epub_chapter.content = '<head>\n<title>' + list_of_chapters[i] + '</title>\n</head>\n<body>\n<strong>' + list_of_chapters[i] + '</strong>\n<p>' + chapter_content + '</p>\n</body>\n</html>'
 
+        # update tkinter to display progress
+        lbl_numOfChapters.configure(text=str(chapter_number)+"/"+str(array_length)+" chapters downloaded")
+        window.update()
+
         # add chapter
         book.add_item(epub_chapter)
         list_of_epub_chapters.append(epub_chapter)
@@ -137,3 +146,18 @@ def create_epub(selected_novel, list_of_links):
 
     # write to the file
     epub.write_epub(selected_novel + '.epub', book)
+
+# button clicked function
+def clicked(window, selected_option, lbl_download, lbl_numOfChapters, lbl_confirmation):
+    selected_novel = selected_option.get()
+    novel_name = novels[selected_novel]
+    list_of_links = download_links(novel_url+novel_name, novel_name)
+
+    lbl_download.configure(text=selected_novel+" selected.\nDownload starting now.")
+    lbl_numOfChapters.configure(text="0/"+str(len(list_of_links))+" chapters downloaded")
+    window.update()
+
+    download_cover(chinese_novel_url, novel_name)
+    create_epub(selected_novel, list_of_links, window, lbl_numOfChapters)
+
+    lbl_confirmation.configure(text="ePub created")
