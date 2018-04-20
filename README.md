@@ -1,6 +1,8 @@
 # Wuxiaworld to ePub Project
 I am a big fan of many wuxiaworld novels and I wanted to learn python. But I often get frustrated that i'm not able to save the chapters for offline reading. So I used this as a  motivation to create a python script that downloads chapters and saves them into an ePub format for easy reading on my iPhone.
 
+All content belongs to wuxiaworld and I claim no credit. This project was started for me to find a practical way to learn python and information retrieval.
+
 ## Prerequisites
 
 You will need to have python 3 installed.
