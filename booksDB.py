@@ -1,9 +1,20 @@
 novels = {
     "A Record of a Mortal’s Journey to Immortality": "rmji",
-    
+    "A Will Eternal": "a-will-eternal",
     "Against the Gods": "against-the-gods",
+    "Ancient Strengthening Technique": "ancient-strengthening-technique",
+    "Archfiend": "archfiend",
+    "City of Sin": "city-of-sin",
+    "Demon Hunter": "demon-hunter",
+    "Desolate Era": "desolate-era",
     "Emperor's Domination": "emperors-domination",
+    "Gate of Revelation": "gate-of-revelation",
+    "Heavenly Jewel Change": "heavenly-jewel-change",
+    "Imperial God Emperor": "imperial-god-emperor",
+    "Invincible": "invincible",
+    "Legend of the Dragon King": "legend-of-the-dragon-king",
+    "Lord of All Realms": "lord-of-all-realms",
     "Martial God Asura": "martial-god-asura",
-    "Tales of Demons and Gods": "tales-of-demons-and-gods",
-
+    "Martial World": "martial-world",
+    "Tales of Demons and Gods": "tales-of-demons-and-gods"
 }

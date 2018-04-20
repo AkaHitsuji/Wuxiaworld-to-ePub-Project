@@ -24,7 +24,7 @@ def download_links(url_link, novel_name):
         list_of_links.append(a['href'])
     return list_of_links
 
-def download_cover(url_link, novel_name):
+def download_cover(url_link, novel_name, window, lbl_coverPage):
     global cover_page_exists
     page = requests.get(url_link).text
     soup = BeautifulSoup(page, 'html.parser')
@@ -39,11 +39,16 @@ def download_cover(url_link, novel_name):
         img_data = requests.get(image_url).content
         with open('cover_page.jpg', 'wb') as handler:
             handler.write(img_data)
+        lbl_coverPage.configure(text="Cover Page Downloaded.")
+        window.update()
         print("Cover page downloaded")
         cover_page_exists = True
     except requests.exceptions.RequestException as e:  # This is the correct syntax
         print(e)
+        lbl_coverPage.configure(text="Cover image does not exist.")
+        window.update()
         print("Cover page image was not downloaded")
+        cover_page_exists = False
 
 def download_chapter(url_link, file_name):
     page = requests.get(url_link).text
@@ -77,7 +82,7 @@ def clean_chapter(file_in, file_out):
 def remove_file(file_in):
     os.remove(file_in)
 
-def create_epub(selected_novel, list_of_links, window, lbl_numOfChapters):
+def create_epub(selected_novel, list_of_links, window, lbl_numOfChapters, lbl_coverPage):
     book = epub.EpubBook()
 
     # set metadata
@@ -88,6 +93,7 @@ def create_epub(selected_novel, list_of_links, window, lbl_numOfChapters):
     if cover_page_exists:
         book.set_cover("cover_page.jpg", open('cover_page.jpg', 'rb').read())
         remove_file("cover_page.jpg")
+        lbl_coverPage.configure(text="Cover page set for ePub")
         print("Cover page removed")
     # TODO: create cover page from title and name etc
     else:
@@ -148,7 +154,7 @@ def create_epub(selected_novel, list_of_links, window, lbl_numOfChapters):
     epub.write_epub(selected_novel + '.epub', book)
 
 # button clicked function
-def clicked(window, selected_option, lbl_download, lbl_numOfChapters, lbl_confirmation):
+def clicked(window, selected_option, lbl_download, lbl_numOfChapters, lbl_confirmation, lbl_coverPage):
     selected_novel = selected_option.get()
     novel_name = novels[selected_novel]
     list_of_links = download_links(novel_url+novel_name, novel_name)
@@ -157,7 +163,10 @@ def clicked(window, selected_option, lbl_download, lbl_numOfChapters, lbl_confir
     lbl_numOfChapters.configure(text="0/"+str(len(list_of_links))+" chapters downloaded")
     window.update()
 
-    download_cover(chinese_novel_url, novel_name)
-    create_epub(selected_novel, list_of_links, window, lbl_numOfChapters)
+    lbl_coverPage.configure(text="Downloading Cover Page.")
+    window.update()
+
+    download_cover(chinese_novel_url, novel_name, window, lbl_coverPage)
+    create_epub(selected_novel, list_of_links, window, lbl_numOfChapters, lbl_coverPage)
 
     lbl_confirmation.configure(text="ePub created")
