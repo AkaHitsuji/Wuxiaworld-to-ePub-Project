@@ -151,7 +151,7 @@ def create_epub(selected_novel, list_of_links, window, lbl_numOfChapters, lbl_co
         book.spine.append(epub_chapter)
 
     # write to the file
-    epub.write_epub(selected_novel + '.epub', book)
+    epub.write_epub(selected_novel + ' - EPUB generator by AkaHitsuji.epub', book)
 
 # button clicked function
 def clicked(window, selected_option, lbl_download, lbl_numOfChapters, lbl_confirmation, lbl_coverPage):
