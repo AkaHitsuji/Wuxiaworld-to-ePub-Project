@@ -7,7 +7,7 @@ from tkinter import ttk
 # get list of novels
 functions.create_DB()
 list_of_novels = []
-for title in novels:
+for title in sorted(novels):
     list_of_novels.append(title)
 
 # tkinter code
