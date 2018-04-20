@@ -4,13 +4,9 @@ from booksDB import novels
 from tkinter import *
 from tkinter import ttk
 
-# # global variables
-# novel_url = 'https://www.wuxiaworld.com/novel/'
-# chinese_novel_url = 'https://www.wuxiaworld.com/language/chinese'
-# list_of_links = []
-list_of_novels = []
-
 # get list of novels
+functions.create_DB()
+list_of_novels = []
 for title in novels:
     list_of_novels.append(title)
 

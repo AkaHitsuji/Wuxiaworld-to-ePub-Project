@@ -4,7 +4,6 @@ import requests
 import os
 import re
 import ebooklib
-from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 from ebooklib import epub
 from booksDB import novels
@@ -15,6 +14,37 @@ chinese_novel_url = 'https://www.wuxiaworld.com/language/chinese'
 list_of_links = []
 list_of_chapters = []
 cover_page_exists = False
+
+def remove_duplicates(list):
+    new_list = []
+    for link in list:
+        if link not in new_list:
+            new_list.append(link)
+    new_list = [title.replace('/novel/','',1) for title in new_list]
+    return new_list
+
+def create_DB():
+    # extract chapter titles and links from webpage
+    page = requests.get(chinese_novel_url).text
+    soup = BeautifulSoup(page, 'html.parser')
+    chapter_titles = []
+    extracted_titles = soup.find_all('h4')[1:]
+    for title in extracted_titles:
+        chapter_titles.append(title.text)
+    chapter_links = []
+    extracted_links = soup.find_all('a', href=re.compile("novel/"))
+    for link in extracted_links:
+        if "chapter" not in link['href']:
+            chapter_links.append(link['href'])
+    chapter_links = remove_duplicates(chapter_links)
+
+    # create DB file
+    file = open('booksDB.py', "w", encoding="utf8")
+    file.write("novels = {\n")
+    for title, link in zip(chapter_titles, chapter_links):
+        file.write('\t\"' + title + '\": \"' + link + '\",\n')
+    file.write("}")
+    file.close
 
 def download_links(url_link, novel_name):
     list_of_links = []
