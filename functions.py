@@ -155,10 +155,10 @@ def create_epub(selected_novel, list_of_links, window, lbl_numOfChapters, lbl_co
         book.add_item(epub_chapter)
         list_of_epub_chapters.append(epub_chapter)
 
-        # for testing: set limit on test printing
         chapter_number+=1
-        if chapter_number==5:
-            break
+        # for testing: set limit on test printing
+        # if chapter_number==5:
+        #     break
 
     # define Table Of Contents
     for epub_chapter in list_of_epub_chapters:
