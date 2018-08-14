@@ -33,5 +33,4 @@ novels = {
 	"The Unrivaled Tang Sect": "the-unrivaled-tang-sect",
 	"TranXending Vision": "tranxending-vision",
 	"Upgrade Specialist in Another World": "upgrade-specialist-in-another-world",
-	"Wu Dong Qian Kun": "wu-dong-qian-kun",
 }
