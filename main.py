@@ -1,11 +1,13 @@
 # imported libraries
 import functions
+import os.path
 from booksDB import novels
 from tkinter import *
 from tkinter import ttk
 
 # get list of novels
-functions.create_DB()
+if os.path.isfile('./booksDB.py') is False:
+    functions.create_DB()
 list_of_novels = []
 for title in sorted(novels):
     list_of_novels.append(title)
