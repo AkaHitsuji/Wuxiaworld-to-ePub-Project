@@ -103,8 +103,7 @@ def clean_chapter(file_in, file_out):
     list_of_chapters.append(chapter_title)
 
     soup = soup.find_all("div", {"class": 'fr-view'})
-    if len(soup) > 1:
-        soup = soup[1]
+    soup = soup[-1]
     text = soup.get_text(separator='\n\n')
     text = text.replace("Previous Chapter", "").replace("Next Chapter", "")
     text = text.lstrip().rstrip()
