@@ -59,9 +59,13 @@ def download_cover(url_link, novel_name, window, lbl_coverPage):
     page = requests.get(url_link).text
     soup = BeautifulSoup(page, 'html.parser')
     soup = soup.find('a', href=re.compile("novel/" + novel_name))
-    soup = soup.find_all('img')
+    if soup is None:
+        soup = ''
+    else:
+        soup = soup.find_all('img')
+        soup = soup[0]['src']
 
-    image_url = 'https://www.wuxiaworld.com'+ soup[0]['src']
+    image_url = 'https://www.wuxiaworld.com'+ soup
 
     try:
         r = requests.get(image_url)
@@ -81,6 +85,7 @@ def download_cover(url_link, novel_name, window, lbl_coverPage):
         cover_page_exists = False
 
 def download_chapter(url_link, file_name):
+    print(url_link)
     page = requests.get(url_link).text
     file = open(file_name, "w", encoding="utf8")
     file.write(page)
@@ -97,7 +102,8 @@ def clean_chapter(file_in, file_out):
     chapter_title = get_title(soup)
     list_of_chapters.append(chapter_title)
 
-    soup = soup.find("div", {"class": 'fr-view'})
+    soup = soup.find_all("div", {"class": 'fr-view'})
+    soup = soup[-1]
     text = soup.get_text(separator='\n\n')
     text = text.replace("Previous Chapter", "").replace("Next Chapter", "")
     text = text.lstrip().rstrip()
@@ -106,6 +112,7 @@ def clean_chapter(file_in, file_out):
     text = text.lstrip().rstrip()
     raw.close()
     file = open(file_out, "w", encoding="utf8")
+    #print(text)
     file.write(text)
     os.remove(file_in)
 
