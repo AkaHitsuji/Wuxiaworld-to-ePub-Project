@@ -64,9 +64,7 @@ def download_cover(url_link, novel_name, window, lbl_coverPage):
     else:
         soup = soup.find_all('img')
         soup = soup[0]['src']
-
-    image_url = 'https://www.wuxiaworld.com'+ soup
-
+        image_url = soup
     try:
         r = requests.get(image_url)
         r.raise_for_status()
