@@ -101,7 +101,7 @@ def clean_chapter(file_in, file_out):
     list_of_chapters.append(chapter_title)
 
     soup = soup.find_all("div", {"class": 'fr-view'})
-    soup = soup[-1]
+    soup = soup[0]
     text = soup.get_text(separator='\n\n')
     text = text.replace("Previous Chapter", "").replace("Next Chapter", "")
     text = text.lstrip().rstrip()
@@ -135,7 +135,8 @@ def create_epub(selected_novel, list_of_links, window, lbl_numOfChapters, lbl_co
         print("No cover page exists")
 
     list_of_epub_chapters = []
-    array_length = len(list_of_links)
+    print('THIS IS THE LIST OF LINKS\n\n',list_of_links)
+    array_length = len(list_of_links)-2
     chapter_number = 1
     for i in range(array_length):
         chapter_title = list_of_links[i].split("/")[3]
